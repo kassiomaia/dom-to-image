@@ -44,6 +44,7 @@
      * @param {Number} options.width - width to be applied to node before rendering.
      * @param {Number} options.height - height to be applied to node before rendering.
      * @param {Object} options.style - an object whose properties to be copied to node's style before rendering.
+     * @param {Function} options.node - after cloning the node this functon going to call before going to next steps.
      * @param {Number} options.quality - a Number between 0 and 1 indicating image quality (applicable to JPEG only),
                 defaults to 1.0.
      * @param {String} options.imagePlaceholder - dataURL to use as a placeholder for failed images, default behaviour is to fail fast on images we can't fetch
@@ -56,6 +57,10 @@
         return Promise.resolve(node)
             .then(function (node) {
                 return cloneNode(node, options.filter, true);
+            })
+            .then(function (node) {
+              if (options.node instanceof Function) options.node(node);
+              return node;
             })
             .then(embedFonts)
             .then(inlineImages)

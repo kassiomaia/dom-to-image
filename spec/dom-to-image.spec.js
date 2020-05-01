@@ -173,6 +173,23 @@
                     .then(done).catch(done);
             });
 
+            it('should call options.node', function (done) {
+                function node(clonedElement) {
+                  if (clonedElement && clonedElement.id === 'dom-node') {
+                    done();
+                  }
+                }
+
+                loadTestPage('small/dom-node.html', 'small/style.css', 'small/control-image')
+                    .then(function () {
+                        return domtoimage.toPng(domNode(), {
+                            node: node
+                        });
+                    })
+                    .then(check)
+                    .catch(done);
+            });
+
             it('should render with external stylesheet', function (done) {
                 loadTestPage('sheet/dom-node.html', 'sheet/style.css', 'sheet/control-image')
                     .then(delay(1000))
